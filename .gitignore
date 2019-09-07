@@ -1,0 +1,15 @@
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+
+# Dependency directories
+node_modules/
+
+# dotenv environment variables file
+.env
+.env.test
+
+
+
