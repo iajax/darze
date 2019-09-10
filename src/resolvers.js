@@ -1,10 +1,10 @@
-import { Data, Movie } from './data';
-
-const data = new Data(Movie);
-
 const resolvers = {
   Query: {
-    movies: (obj, args, ctx) => data.find({}),
+    movies: async (obj, args, ctx) => {
+      const movie = await ctx.models.Movie.find({});
+
+      return movie;
+    },
   },
 };
 
