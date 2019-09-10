@@ -1,22 +1,21 @@
-const { ApolloServer, gql } = require('apollo-server-micro');
+import { ApolloServer, gql } from 'apollo-server-micro';
+import { initialize } from './data';
+import typeDefs from './typeDefs';
+import resolvers from './resolvers';
 
-const typeDefs = gql`
-  type Query {
-    sayHello: String
-  }
+const typeDef = gql`
+  type Query
 `;
 
-const resolvers = {
-  Query: {
-    sayHello() {
-      return 'Hello World!';
-    },
-  },
-};
+try {
+  initialize();
+} catch (err) {
+  console.log('MongoConnector error: ', err);
+}
 
 const apolloServer = new ApolloServer({
-  typeDefs,
-  resolvers,
+  typeDefs: [typeDef, typeDefs],
+  resolvers: [resolvers],
 });
 
-module.exports = apolloServer.createHandler();
+export default apolloServer.createHandler();
