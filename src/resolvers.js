@@ -1,6 +1,6 @@
 const resolvers = {
   Query: {
-    movies: async (obj, args, ctx) => {
+    movies: async (_, __, ctx) => {
       const movie = await ctx.models.Movie.find({});
 
       return movie;

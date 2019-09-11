@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from 'apollo-server-micro';
-import { initialize, Movie } from './data';
+import Movie from './models/movie';
+import mongooseConnect from './connectors';
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
@@ -8,9 +9,10 @@ const typeDef = gql`
 `;
 
 try {
-  initialize();
+  mongooseConnect();
 } catch (err) {
-  console.log('MongoConnector error: ', err);
+  // eslint-disable-next-line no-console
+  console.log('Connector error: ', err);
 }
 
 const apolloServer = new ApolloServer({
