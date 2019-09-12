@@ -7,8 +7,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node -r esm ./node_modules/.bin/micro",
-    "dev": "node -r esm ./node_modules/.bin/micro-dev -s",
+    "start": "node -r esm",
+    "dev": "nodemon -r esm",
     "lint": "eslint . --ext .js"
   },
   "husky": {
@@ -17,11 +17,11 @@
     }
   },
   "dependencies": {
-    "apollo-server-micro": "^2.9.3",
+    "@apollo/federation": "^0.9.4",
+    "apollo-server": "^2.9.3",
     "dotenv": "^8.1.0",
     "esm": "^3.2.25",
     "graphql": "^14.5.4",
-    "micro": "^9.3.4",
     "mongoose": "^5.6.13",
     "mongoose-unique-validator": "^2.0.3"
   },
@@ -36,7 +36,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-react-hooks": "^2.0.1",
     "husky": "^3.0.5",
-    "micro-dev": "^3.0.0",
+    "nodemon": "^1.19.2",
     "prettier": "1.18.2",
     "pretty-quick": "^1.11.1"
   }

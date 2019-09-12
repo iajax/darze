@@ -1,10 +1,12 @@
 const resolvers = {
   Query: {
-    movies: async (_, __, ctx) => {
-      const movie = await ctx.models.Movie.find({});
+    allUsers: (_, __, ctx) => ctx.models.User.find({}),
+    user: (obj, args, ctx) => ctx.models.User.findOne({ _id: args.id }),
+  },
 
-      return movie;
-    },
+  User: {
+    __resolveReference: (user, ctx) =>
+      ctx.models.User.findOne({ _id: user.id }),
   },
 };
 

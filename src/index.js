@@ -1,26 +1,27 @@
-import { ApolloServer, gql } from 'apollo-server-micro';
-import Movie from './models/movie';
+import { ApolloServer } from 'apollo-server';
+import { buildFederatedSchema } from '@apollo/federation';
+
 import mongooseConnect from './connectors';
+
 import typeDefs from './typeDefs';
 import resolvers from './resolvers';
 
-const typeDef = gql`
-  type Query
-`;
+import User from './models/user';
 
 try {
   mongooseConnect();
 } catch (err) {
-  // eslint-disable-next-line no-console
   console.log('Connector error: ', err);
 }
 
-const apolloServer = new ApolloServer({
-  typeDefs: [typeDef, typeDefs],
-  resolvers: [resolvers],
-  context: async () => ({ models: { Movie } }),
+const PORT = process.env.PORT || 4003;
+
+const server = new ApolloServer({
+  schema: buildFederatedSchema([{ typeDefs, resolvers }]),
+  context: req => ({
+    ...req,
+    models: { User },
+  }),
 });
 
-const server = apolloServer.createHandler();
-
-export default server;
+server.listen(PORT).then(({ url }) => console.log(`🚀 Server ready at ${url}`));

@@ -1,14 +1,21 @@
-import { gql } from 'apollo-server-micro';
+import { gql } from 'apollo-server';
 
-const typeDefs = gql`
-  type Movie {
-    title: String
-    description: String
+const schema = gql`
+  # A user
+  type User @key(fields: "id") {
+    id: ID!
+    # The users' name
+    name: String
+    # The users' username
+    username: String
   }
-
+  # Queries from user service
   extend type Query {
-    movies: [Movie]
+    # List of all our users
+    allUsers: [User]
+    # A single user
+    user(id: ID!): User
   }
 `;
 
-export default typeDefs;
+export default schema;
