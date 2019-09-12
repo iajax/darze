@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import uniqueValidator from 'mongoose-unique-validator';
@@ -13,7 +12,6 @@ const options = {
   },
   authSource: 'admin',
   useNewUrlParser: true,
-  useCreateIndex: true,
 };
 
 const mongooseConnect = () => {
