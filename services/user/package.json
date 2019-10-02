@@ -1,0 +1,25 @@
+{
+  "name": "user",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/iajax/darze.git",
+  "author": "richard <inf.darzegmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node -r esm .",
+    "dev": "nodemon -r esm"
+  },
+  "dependencies": {
+    "@apollo/federation": "^0.9.4",
+    "apollo-server": "^2.9.3",
+    "dotenv": "^8.1.0",
+    "esm": "^3.2.25",
+    "graphql": "^14.5.4",
+    "mongoose": "^5.6.13",
+    "mongoose-unique-validator": "^2.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}

@@ -8,13 +8,11 @@ import resolvers from './resolvers';
 
 import User from './models/user';
 
-try {
-  mongooseConnect();
-} catch (err) {
-  console.log('Connector error: ', err);
-}
+(async () => {
+  await mongooseConnect();
+})();
 
-const PORT = process.env.PORT || 4003;
+const { PORT } = process.env;
 
 const server = new ApolloServer({
   schema: buildFederatedSchema([{ typeDefs, resolvers }]),
@@ -24,4 +22,4 @@ const server = new ApolloServer({
   }),
 });
 
-server.listen(PORT).then(({ url }) => console.log(`🚀 Server ready at ${url}`));
+server.listen(PORT).then(({ url }) => console.log(`Server ready at ${url}`));

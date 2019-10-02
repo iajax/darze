@@ -1,0 +1,21 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/iajax/darze.git",
+  "author": "richard <inf.darzegmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node -r esm .",
+    "dev": "nodemon -r esm"
+  },
+  "dependencies": {
+    "@apollo/gateway": "^0.10.4",
+    "apollo-server": "^2.9.3",
+    "esm": "^3.2.25"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}

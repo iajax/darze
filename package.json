@@ -1,15 +1,17 @@
 {
-  "name": "darze",
+  "name": "graphql-microservice",
   "version": "1.0.0",
-  "main": "src/index.js",
   "repository": "https://github.com/iajax/darze.git",
   "author": "richard <inf.darzegmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node -r esm",
-    "dev": "nodemon -r esm",
-    "lint": "eslint . --ext .js"
+    "start:user": "cd ./services/user && yarn start",
+    "prestart:gateway": "wait-on tcp:4001",
+    "start:gateway": "cd ./services/gateway && yarn start",
+    "start": "concurrently -n w: yarn:start:*",
+    "lint": "eslint . --ext .js",
+    "post:install": "lerna bootstrap"
   },
   "husky": {
     "hooks": {
@@ -17,27 +19,20 @@
     }
   },
   "dependencies": {
-    "@apollo/federation": "^0.9.4",
-    "apollo-server": "^2.9.3",
+    "concurrently": "^4.1.2",
     "dotenv": "^8.1.0",
-    "esm": "^3.2.25",
-    "graphql": "^14.5.4",
-    "mongoose": "^5.6.13",
-    "mongoose-unique-validator": "^2.0.3"
+    "esm": "^3.2.25"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
-    "eslint": "^6.3.0",
-    "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-prettier": "^6.2.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-prettier": "^3.1.0",
-    "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-hooks": "^2.0.1",
+    "eslint": "^6.4.0",
     "husky": "^3.0.5",
+    "lerna": "^3.16.4",
     "nodemon": "^1.19.2",
-    "prettier": "1.18.2",
-    "pretty-quick": "^1.11.1"
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "wait-on": "^3.3.0"
+  },
+  "git": {
+    "pre-commit": "lint-staged"
   }
 }
