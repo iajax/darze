@@ -4,18 +4,13 @@ import uniqueValidator from 'mongoose-unique-validator';
 
 dotenv.config();
 
-const uri = `${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`;
+const uri = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@${process.env.MONGODB_HOST}:${process.env.MONGODB_PORT}/${process.env.MONGODB_DB}`;
 const options = {
-  auth: {
-    user: process.env.MONGODB_USER,
-    password: process.env.MONGODB_PASS,
-  },
   authSource: 'admin',
   useNewUrlParser: true,
-  useCreateIndex: true,
 };
 
-const initialize = () => {
+const mongooseConnect = () => {
   mongoose.Promise = global.Promise;
 
   mongoose.connect(uri, options);
@@ -35,4 +30,4 @@ const initialize = () => {
   return true;
 };
 
-export { initialize };
+export default mongooseConnect;
