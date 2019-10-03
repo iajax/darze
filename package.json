@@ -2,7 +2,7 @@
   "name": "graphql-microservice",
   "version": "1.0.0",
   "repository": "https://github.com/iajax/darze.git",
-  "author": "richard <inf.darzegmail.com>",
+  "author": "richard <inf.darze@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -10,13 +10,7 @@
     "prestart:gateway": "wait-on tcp:4001",
     "start:gateway": "cd ./services/gateway && yarn start",
     "start": "concurrently -n w: yarn:start:*",
-    "lint": "eslint . --ext .js",
     "post:install": "lerna bootstrap"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged"
-    }
   },
   "dependencies": {
     "concurrently": "^4.1.2",
@@ -24,15 +18,8 @@
     "esm": "^3.2.25"
   },
   "devDependencies": {
-    "eslint": "^6.4.0",
-    "husky": "^3.0.5",
     "lerna": "^3.16.4",
     "nodemon": "^1.19.2",
-    "prettier": "^1.18.2",
-    "pretty-quick": "^1.11.1",
     "wait-on": "^3.3.0"
-  },
-  "git": {
-    "pre-commit": "lint-staged"
   }
 }
