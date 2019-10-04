@@ -8,6 +8,9 @@ const uri = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASS}@$
 const options = {
   authSource: 'admin',
   useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true,
 };
 
 const mongooseConnect = () => {
