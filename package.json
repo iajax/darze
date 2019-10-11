@@ -13,7 +13,7 @@
     "post:install": "lerna bootstrap"
   },
   "dependencies": {
-    "concurrently": "4.1.2",
+    "concurrently": "5.0.0",
     "dotenv": "8.1.0",
     "esm": "3.2.25"
   },
