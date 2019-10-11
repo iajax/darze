@@ -5,28 +5,37 @@ const schema = gql`
   type User @key(fields: "id") {
     id: ID!
     # The users' name
-    name: String
-    # The users' username
-    username: String
-  }
-  input UserInput {
     first_name: String
+    # The users' username
     username: String
     email: String
     password: String
+    profile_picture: String
+    biography: String
+    external_url: String
+    private: Boolean
+    verified: Boolean
   }
+
+  input UserInput {
+    first_name: String
+    email: String
+    password: String
+  }
+
   input UpdateUserInput {
     first_name: String
     username: String
     email: String
     password: String
   }
+
   # Queries from user service
   extend type Query {
     # List of all our users
-    allUsers: [User]
+    getUsers: [User]
     # A single user
-    user(id: ID!): User
+    getUser(id: ID!): User
   }
 
   extend type Mutation {

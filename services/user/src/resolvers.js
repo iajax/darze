@@ -1,27 +1,38 @@
+import schemaValidate from './utils/schemaValidate';
+import schema from './utils/schema';
+
+const validator = schema => schemaValidate(schema);
+
 const resolvers = {
   Query: {
-    allUsers: (_, __, ctx) => ctx.models.User.find({}),
-    user: (obj, args, ctx) => ctx.models.User.findOne({ _id: args.id }),
+    getUsers(_, __, ctx) {
+      return ctx.dataSources.users.find();
+    },
+    getUser(_, args, ctx) {
+      return ctx.dataSources.users.findById(args.id);
+    },
   },
 
   Mutation: {
-    createUser: (_, args, ctx) => ctx.models.User.create(args.input),
-    updateUser: (_, args, ctx) =>
-      ctx.models.User.findOneAndUpdate(ctx.user._id, args.input, {
-        new: true,
-      })
-        .select('-password')
-        .lean()
-        .exec(),
-    removeProduct: (_, args, ctx) =>
-      ctx.models.User.findByIdAndRemove(args._id)
-        .lean()
-        .exec(),
+    async createUser(_, args, ctx) {
+      await validator(schema);
+
+      console.log('paso');
+
+      return ctx.dataSources.users.create(args.input);
+    },
+    updateUser(_, args, ctx) {
+      return ctx.dataSources.users.update(args.id, args.input);
+    },
+    removeUser(_, args, ctx) {
+      return ctx.dataSources.users.remove(args.id);
+    },
   },
 
   User: {
-    __resolveReference: (user, ctx) =>
-      ctx.models.User.findOne({ _id: user.id }),
+    __resolveReference(user, ctx) {
+      return ctx.dataSources.users.findById(user.id);
+    },
   },
 };
 
