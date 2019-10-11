@@ -13,12 +13,12 @@
     "post:install": "lerna bootstrap"
   },
   "dependencies": {
-    "concurrently": "4.1.2",
+    "concurrently": "5.0.0",
     "dotenv": "8.1.0",
     "esm": "3.2.25"
   },
   "devDependencies": {
-    "lerna": "3.16.4",
+    "lerna": "3.17.0",
     "nodemon": "1.19.3",
     "wait-on": "3.3.0"
   }
