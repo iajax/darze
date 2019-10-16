@@ -1,11 +1,11 @@
-import mongoose from 'mongoose';
-import uniqueValidator from 'mongoose-unique-validator';
-import dotenv from 'dotenv';
+import mongoose from 'mongoose'
+import uniqueValidator from 'mongoose-unique-validator'
+import dotenv from 'dotenv'
 
-dotenv.config();
+dotenv.config()
 
 const connect = () => {
-  mongoose.Promise = global.Promise;
+  mongoose.Promise = global.Promise
 
   mongoose
     .connect(process.env.MONGO_URI, {
@@ -13,16 +13,16 @@ const connect = () => {
       useNewUrlParser: true,
       useCreateIndex: true,
       useFindAndModify: false,
-      useUnifiedTopology: true,
+      useUnifiedTopology: true
     })
     .then(
-      () => console.log("We're connected!"),
+      () => console.log(`We're connected!`),
       err => console.log(`Mongoose connection error: ${err}`)
-    );
+    )
 
-  mongoose.plugin(uniqueValidator);
+  mongoose.plugin(uniqueValidator)
 
-  return true;
-};
+  return true
+}
 
-export default connect;
+export default connect

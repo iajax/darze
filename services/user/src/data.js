@@ -1,84 +1,86 @@
-import { ApolloError } from 'apollo-server';
-import { DataSource } from 'apollo-datasource';
-import DataLoader from 'dataloader';
-import { keyBy, map } from 'lodash';
+import { ApolloError } from 'apollo-server'
+import { DataSource } from 'apollo-datasource'
+import DataLoader from 'dataloader'
+import { keyBy, map } from 'lodash'
+import User from './models/user'
+import { newApiKey } from './utils/auth'
+import { refresh, sign, verify } from './utils/token'
 
-class UserDataSource extends DataSource {
-  initialize(config) {
-    this.ctx = config.context;
+export default class UserDataSource extends DataSource {
+  initialize() {
     this.loader = new DataLoader(userIds =>
-      this.ctx.models.user
-        .find({ _id: { $in: userIds } })
+      User.find({ _id: { $in: userIds } })
         .exec()
         .then(users => {
-          const keys = keyBy(users, '_id');
+          const keys = keyBy(users, '_id')
 
-          return Promise.all(map(userIds, userId => keys[userId]));
+          return Promise.all(map(userIds, userId => keys[userId]))
         })
-    );
+    )
   }
 
   find() {
-    return this.ctx.models.user.find({}).exec();
+    return User.find({}).exec()
   }
 
   findById(id) {
-    return this.loader.load(id);
+    return this.loader.load(id)
   }
 
   findByEmail(email) {
-    return this.ctx.models.user
-      .findOne({ email })
-      .lean()
-      .exec();
+    return User.findOne({ email }).exec()
   }
 
-  findByUsername(username) {
-    return this.ctx.models.user
-      .findOne({ username })
-      .lean()
-      .exec();
-  }
+  async signup(input) {
+    const apiKey = newApiKey()
+    const user = await User.create({ ...input, apiKey })
+    const token = await sign(user.apiKey, user._id)
 
-  async create(input) {
-    const existingUser = await this.findByEmail(input.email);
-
-    if (existingUser) {
-      throw new ApolloError('User exists already!');
-    }
-
-    let username = input.email.split('@')[0];
-
-    const existingUsername = await this.findByUsername(username);
-
-    if (existingUsername) {
-      username = '';
-    }
-
-    return this.ctx.models.user.create({ ...input, username });
-  }
-
-  async update(id, input) {
-    return await this.ctx.models.user
-      .findOneAndUpdate({ _id: id }, input, { new: true, select: '-password' })
-      .lean()
-      .exec();
-  }
-
-  async remove(id) {
-    return await this.ctx.models.user
-      .findOneAndRemove({ _id: id })
-      .lean()
-      .exec();
+    return { token, user }
   }
 
   async login(email, password) {
-    const user = await this.findByEmail(email);
+    const user = await this.findByEmail(email)
 
-    if (user) {
-      await this.ctx.models.user.comparePassword(password);
+    if (!user) {
+      throw new ApolloError(`The username does not exist`)
+    }
+
+    const match = await user.comparePassword(password)
+
+    if (!match) {
+      throw new ApolloError(`Invalid login`)
+    }
+
+    const token = await sign(user.apiKey, user._id)
+
+    return { token, me: user }
+  }
+
+  async update(id, input) {
+    return await User.findOneAndUpdate({ _id: id }, input, {
+      new: true
+    })
+      .lean()
+      .exec()
+  }
+
+  async remove(id) {
+    return await User.findOneAndRemove({ _id: id })
+      .lean()
+      .exec()
+  }
+
+  async newToken(token) {
+    if (token) {
+      const payload = await verify(token)
+      const accessToken = await sign(payload.aud, payload.sub)
+      const refreshToken = await refresh(payload.aud, payload.sub)
+
+      return {
+        accessToken,
+        refreshToken
+      }
     }
   }
 }
-
-export default UserDataSource;

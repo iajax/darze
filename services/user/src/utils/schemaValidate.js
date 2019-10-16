@@ -1,21 +1,19 @@
-import { UserInputError } from 'apollo-server';
-import { map } from 'lodash';
+import { UserInputError } from 'apollo-server'
+import { map } from 'lodash'
 
-const schemaValidate = async (schema, args) => {
+const schemaValidate = async (args, schema) => {
   try {
-    await schema.validateAsync(args, {
-      abortEarly: false,
-      allowUnknown: true,
-      stripUnknown: false,
-    });
+    await schema.validateAsync(args)
   } catch (err) {
     const invalidArgs = await map(err.details, ({ message, type }) => ({
-      message: message.replace(/['"]/g, ''),
-      type,
-    }));
+      message,
+      type
+    }))
 
-    throw new UserInputError('Validation errors', { invalidArgs });
+    throw new UserInputError('Argument validation errors', {
+      invalidArgs
+    })
   }
-};
+}
 
-export default schemaValidate;
+export default schemaValidate

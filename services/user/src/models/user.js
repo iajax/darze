@@ -1,75 +1,73 @@
-import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { model, Schema } from 'mongoose'
+import bcrypt from 'bcrypt'
 
 const schema = new Schema(
   {
-    first_name: {
+    firstName: {
       type: String,
-      trim: true,
+      trim: true
     },
     username: {
       type: String,
-      required: true,
-      lowercase: true,
-      unique: true,
+      validate: {
+        validator: username => model('User').doesntExist({ username }),
+        message: ({ value }) => `Username ${value} has already been taken`
+      }
     },
     email: {
       type: String,
       required: true,
-      unique: true,
-      trim: true,
+      validate: {
+        validator: email => model('User').doesntExist({ email }),
+        message: ({ value }) => `Email ${value} has already been taken`
+      }
     },
     password: {
       type: String,
-      required: true,
+      required: true
     },
-    profile_picture: String,
+    picture: String,
     biography: String,
-    external_url: String,
+    externalUrl: String,
+    apiKey: {
+      type: String,
+      required: true
+    },
     private: {
       type: Boolean,
-      default: false,
+      default: false
     },
     verified: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   {
-    minimize: false,
     timestamps: true,
-    versionKey: false,
+    versionKey: false
   }
-);
+)
 
-schema.pre('save', function(next) {
-  const user = this;
-  const saltRounds = 10;
+schema.pre('save', async function(next) {
+  try {
+    if (!this.isModified('password')) return next()
+    this.password = await bcrypt.hash(this.password, 10)
+    return next()
+  } catch (err) {
+    return next(err)
+  }
+})
 
-  if (!this.isModified('password')) return next();
+schema.method({
+  comparePassword: async function(password) {
+    return await bcrypt.compare(password, this.password)
+  }
+})
 
-  bcrypt.genSalt(saltRounds, function(err, salt) {
-    if (err) return next();
+schema.static({
+  doesntExist: async function(conditions) {
+    return (await this.find(conditions).countDocuments()) === 0
+  }
+})
 
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      if (err) return next();
-
-      user.password = hash;
-      next();
-    });
-  });
-});
-
-schema.methods.comparePassword = function(password) {
-  const hash = this.password;
-
-  return new Promise((resolve, reject) => {
-    bcrypt.compare(password, hash, function(err, same) {
-      if (err) return reject(err);
-
-      resolve(same);
-    });
-  });
-};
-
-export default model('User', schema);
+export default model('User', schema)

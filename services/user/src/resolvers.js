@@ -1,39 +1,51 @@
-import schemaValidate from './utils/schemaValidate';
-import schema from './utils/schema';
-
-const validator = schema => schemaValidate(schema);
+import validator from './utils/validator'
+import schema from './utils/schema'
 
 const resolvers = {
   Query: {
     getUsers(_, __, ctx) {
-      return ctx.dataSources.users.find();
+      return ctx.dataSources.users.find()
     },
-    getUser(_, args, ctx) {
-      return ctx.dataSources.users.findById(args.id);
-    },
+    async getUser(_, args, ctx) {
+      await validator(args, schema.get)
+
+      return ctx.dataSources.users.findById(args.id)
+    }
   },
 
   Mutation: {
-    async createUser(_, args, ctx) {
-      await validator(schema);
+    async signup(_, args, ctx) {
+      await validator(args, schema.signup)
 
-      console.log('paso');
+      return ctx.dataSources.users.signup(args.input)
+    },
+    async login(_, args, ctx) {
+      await validator(args, schema.login)
 
-      return ctx.dataSources.users.create(args.input);
+      return ctx.dataSources.users.login(args.email, args.password)
     },
-    updateUser(_, args, ctx) {
-      return ctx.dataSources.users.update(args.id, args.input);
+    async updateUser(_, args, ctx) {
+      await validator(args, schema.update)
+
+      return ctx.dataSources.users.update(args.id, args.input)
     },
-    removeUser(_, args, ctx) {
-      return ctx.dataSources.users.remove(args.id);
+    async removeUser(_, args, ctx) {
+      await validator(args, schema.remove)
+
+      return ctx.dataSources.users.remove(args.id)
     },
+    async newToken(_, args, ctx) {
+      await validator(args, schema.token)
+
+      return ctx.dataSources.users.newToken(args.token)
+    }
   },
 
   User: {
     __resolveReference(user, ctx) {
-      return ctx.dataSources.users.findById(user.id);
-    },
-  },
-};
+      return ctx.dataSources.users.findById(user.id)
+    }
+  }
+}
 
-export default resolvers;
+export default resolvers

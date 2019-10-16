@@ -1,48 +1,57 @@
-import { gql } from 'apollo-server';
+import { gql } from 'apollo-server'
 
 const schema = gql`
-  # A user
   type User @key(fields: "id") {
     id: ID!
-    # The users' name
-    first_name: String
-    # The users' username
+    firstName: String
     username: String
     email: String
-    password: String
-    profile_picture: String
+    picture: String
     biography: String
-    external_url: String
+    externalUrl: String
     private: Boolean
     verified: Boolean
   }
 
   input UserInput {
-    first_name: String
+    firstName: String
     email: String
     password: String
   }
 
   input UpdateUserInput {
-    first_name: String
+    firstName: String
     username: String
     email: String
     password: String
+    picture: String
+    biography: String
+    externalUrl: String
+    private: Boolean
   }
 
-  # Queries from user service
-  extend type Query {
-    # List of all our users
+  type Token {
+    accessToken: String!
+    refreshToken: String!
+  }
+
+  type AuthPayload {
+    token: String!
+    me: User!
+  }
+
+  type Query {
     getUsers: [User]
-    # A single user
     getUser(id: ID!): User
   }
 
-  extend type Mutation {
-    createUser(input: UserInput!): User!
+  type Mutation {
+    signup(input: UserInput!): AuthPayload!
+    login(email: String!, password: String!): AuthPayload!
     updateUser(id: ID!, input: UpdateUserInput!): User!
-    removeProduct(id: ID!): User!
+    removeUser(id: ID!): User!
+    newToken(token: String!): Token!
   }
-`;
+`
 
-export default schema;
+export default schema
