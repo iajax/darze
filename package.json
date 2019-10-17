@@ -19,7 +19,7 @@
   },
   "devDependencies": {
     "lerna": "3.17.0",
-    "nodemon": "1.19.3",
+    "nodemon": "1.19.4",
     "wait-on": "3.3.0"
   }
 }
