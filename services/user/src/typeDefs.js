@@ -30,11 +30,6 @@ const schema = gql`
     private: Boolean
   }
 
-  type Token {
-    accessToken: String!
-    refreshToken: String!
-  }
-
   type AuthPayload {
     token: String!
     me: User!
@@ -50,7 +45,6 @@ const schema = gql`
     login(email: String!, password: String!): AuthPayload!
     updateUser(id: ID!, input: UpdateUserInput!): User!
     removeUser(id: ID!): User!
-    newToken(token: String!): Token!
   }
 `
 
