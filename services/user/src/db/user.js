@@ -29,10 +29,6 @@ const schema = new Schema(
     picture: String,
     biography: String,
     externalUrl: String,
-    apiKey: {
-      type: String,
-      required: true
-    },
     private: {
       type: Boolean,
       default: false
