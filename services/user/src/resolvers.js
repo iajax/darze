@@ -1,44 +1,56 @@
-import validator from './utils/validator'
+import { ApolloError } from 'apollo-server'
+import validate from './utils/validate'
 import schema from './utils/schema'
+import { sign } from './utils/token'
 
 const resolvers = {
   Query: {
-    getUsers(_, __, ctx) {
-      return ctx.dataSources.users.find()
-    },
-    async getUser(_, args, ctx) {
-      await validator(args, schema.get)
-
-      return ctx.dataSources.users.findById(args.id)
-    }
+    getUsers: (_, __, { models }) => models.User.find({}).exec(),
+    getUser: validate(schema.get, (_, { id }, { dataSources }) =>
+      dataSources.users.findById(id)
+    )
   },
 
   Mutation: {
-    async signup(_, args, ctx) {
-      await validator(args, schema.signup)
+    signup: validate(schema.signup, async (_, { input }, { models }) => {
+      const me = await models.User.create(input)
 
-      return ctx.dataSources.users.signup(args.input)
-    },
-    async login(_, args, ctx) {
-      await validator(args, schema.login)
+      const token = await sign({ sub: me._id })
 
-      return ctx.dataSources.users.login(args.email, args.password)
-    },
-    async updateUser(_, args, ctx) {
-      await validator(args, schema.update)
+      return { token, me }
+    }),
+    login: validate(
+      schema.login,
+      async (_, { email, password }, { models }) => {
+        const me = await models.User.findOne({ email }).exec()
 
-      return ctx.dataSources.users.update(args.id, args.input)
-    },
-    async removeUser(_, args, ctx) {
-      await validator(args, schema.remove)
+        if (!me) {
+          throw new ApolloError(`The username does not exist`)
+        }
 
-      return ctx.dataSources.users.remove(args.id)
-    },
-    async newToken(_, args, ctx) {
-      await validator(args, schema.token)
+        const match = await me.comparePassword(password)
 
-      return ctx.dataSources.users.newToken(args.token)
-    }
+        if (!match) {
+          throw new ApolloError(`Invalid login`)
+        }
+
+        const token = await sign({ sub: me._id })
+
+        return { token, me }
+      }
+    ),
+    updateUser: validate(schema.update, (_, { id, input }, { models }) =>
+      models.User.findOneAndUpdate({ _id: id }, input, {
+        new: true
+      })
+        .lean()
+        .exec()
+    ),
+    removeUser: validate(schema.remove, (_, { id }, { models }) =>
+      models.User.findOneAndRemove({ _id: id })
+        .lean()
+        .exec()
+    )
   },
 
   User: {
