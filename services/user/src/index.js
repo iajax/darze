@@ -1,10 +1,9 @@
 import { ApolloServer } from 'apollo-server'
 import { buildFederatedSchema } from '@apollo/federation'
-import connect from './db'
-import UserDataSource from './data'
+import { connect, UserDataSource, User } from './db'
 import typeDefs from './typeDefs'
 import resolvers from './resolvers'
-// import { authenticate } from './utils/auth';
+import { getUser } from './helpers/auth'
 ;(async () => await connect())()
 
 const port = process.env.PORT
@@ -14,9 +13,12 @@ const server = new ApolloServer({
   dataSources: () => ({
     users: new UserDataSource()
   }),
-  context: () => ({
-    // user: await new authenticate(req),
-  })
+  context: async ({ req }) => {
+    const token = req.headers.authorization || ''
+    const user = await getUser(token)
+
+    return { user, models: { User } }
+  }
 })
 
 server.listen({ port }).then(({ url }) => console.log(`Server ready at ${url}`))
