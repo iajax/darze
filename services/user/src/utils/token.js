@@ -1,57 +1,41 @@
-// import { AuthenticationError } from 'apollo-server'
+import { AuthenticationError } from 'apollo-server'
 import jwt from 'jsonwebtoken'
-import moment from 'moment'
 
-export const sign = (
-  apiKey,
-  userId,
-  options = { jwtid: '1' },
-  refresh = false
-) => {
-  const payload = {
-    aud: apiKey,
-    sub: userId,
-    scopes: ['api_read'],
-    iat: moment().unix(),
-    exp: moment()
-      .add(
-        !refresh
-          ? process.env.TOKEN_LIFETIME
-          : process.env.REFRESH_TOKEN_LIFETIME,
-        'hours'
-      )
-      .unix()
-  }
-
-  return jwt.sign(payload, process.env.SECRET_KEY, {
+export const sign = (payload, options = { jwtid: '1' }) =>
+  jwt.sign(payload, process.env.JWT_SECRET, {
     ...options,
-    audience: apiKey
+    expiresIn: process.env.JWT_EXPIRES_IN,
+    notBefore: '2s',
+    audience: process.env.JWT_AUDIENCE,
+    issuer: process.env.JWT_ISSUER
   })
-}
 
-export const verify = (token, options = { jwtid: '1' }) => {
+export const verify = token => {
   try {
-    const payload = jwt.verify(token, process.env.SECRET_KEY, options.verify)
+    const payload = jwt.verify(token, process.env.JWT_SECRET, {
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER
+    })
 
-    if (payload.exp <= moment().unix()) {
-      // throw new AuthenticationError('Token has expired')
-      throw new jwt.TokenExpiredError('Token has expired')
-    }
+    delete payload.iat
+    delete payload.exp
+    delete payload.nbf
+    delete payload.jti
 
     return payload
   } catch (err) {
-    // throw new AuthenticationError('Invalid token')
-    throw new jwt.JsonWebTokenError('Invalid token')
+    throw new AuthenticationError('Token invalid or expired')
   }
 }
 
 export const refresh = token => {
   const payload = verify(token)
 
-  return sign(
-    payload.aud,
-    payload.sub,
-    { verify: { audience: payload.aud }, jwtid: '2' },
-    true
-  )
+  return sign(payload, {
+    verify: {
+      audience: process.env.JWT_AUDIENCE,
+      issuer: process.env.JWT_ISSUER
+    },
+    jwtid: '2'
+  })
 }

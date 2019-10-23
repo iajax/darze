@@ -7,12 +7,11 @@ const objectIdSchema = {
 const emailAndPasswordSchema = {
   email: Joi.string()
     .email()
+    .required()
     .label('Email'),
   password: Joi.string()
-    .pattern(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      'min eight characters, at least one uppercase letter, one lowercase letter, one number and one special character'
-    )
+    .min(3)
+    .required()
     .label('Password')
 }
 
@@ -40,8 +39,5 @@ export default {
   }),
   remove: Joi.object().keys({
     ...objectIdSchema
-  }),
-  token: Joi.object().keys({
-    token: Joi.string().required()
   })
 }
