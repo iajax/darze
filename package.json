@@ -7,6 +7,7 @@
   "private": true,
   "scripts": {
     "start:user": "cd ./services/user && yarn start",
+    "start:movie": "cd ./services/movie && yarn start",
     "prestart:gateway": "wait-on tcp:4001",
     "start:gateway": "cd ./services/gateway && yarn start",
     "start": "concurrently -n w: yarn:start:*",
