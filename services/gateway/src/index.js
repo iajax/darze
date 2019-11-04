@@ -7,19 +7,17 @@ dotenv.config()
 const port = process.env.PORT
 
 const gateway = new ApolloGateway({
-  serviceList: [{ name: 'users', url: process.env.USER_SERVICE_URL }]
+  serviceList: [
+    { name: 'users', url: process.env.USER_SERVICE_URL },
+    { name: 'movies', url: process.env.MOVIE_SERVICE_URL }
+  ]
 })
 
-;(async () => {
-  const { schema, executor } = await gateway.load()
+const server = new ApolloServer({
+  gateway,
+  subscriptions: false
+})
 
-  const server = new ApolloServer({
-    schema,
-    executor
-  })
-
-  server
-    .listen({ port })
-    // eslint-disable-next-line no-console
-    .then(({ url }) => console.log(`🚀Server ready at ${url}`))
-})()
+server
+  .listen({ port })
+  .then(({ url }) => console.log(`🚀Server ready at ${url}`))
