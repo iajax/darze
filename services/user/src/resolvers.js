@@ -1,63 +1,29 @@
-import { ApolloError } from 'apollo-server'
 import validate from './utils/validate'
 import schema from './utils/schema'
-import { sign } from './utils/token'
 
-const resolvers = {
+export default {
   Query: {
-    getUsers: (_, __, { models }) => models.User.find({}).exec(),
+    getUsers: (_, __, { dataSources }) => dataSources.users.find(),
     getUser: validate(schema.get, (_, { id }, { dataSources }) =>
       dataSources.users.findById(id)
     )
   },
-
   Mutation: {
-    signup: validate(schema.signup, async (_, { input }, { models }) => {
-      const me = await models.User.create(input)
-
-      const token = await sign({ sub: me._id })
-
-      return { token, me }
-    }),
-    login: validate(
-      schema.login,
-      async (_, { email, password }, { models }) => {
-        const me = await models.User.findOne({ email }).exec()
-
-        if (!me) {
-          throw new ApolloError(`The username does not exist`)
-        }
-
-        const match = await me.comparePassword(password)
-
-        if (!match) {
-          throw new ApolloError(`Invalid login`)
-        }
-
-        const token = await sign({ sub: me._id })
-
-        return { token, me }
-      }
+    updateUser: validate(schema.update, (_, { id, input }, { dataSources }) =>
+      dataSources.users.update(id, input)
     ),
-    updateUser: validate(schema.update, (_, { id, input }, { models }) =>
-      models.User.findOneAndUpdate({ _id: id }, input, {
-        new: true
-      })
-        .lean()
-        .exec()
+    removeUser: validate(schema.remove, (_, { id }, { dataSources }) =>
+      dataSources.users.remove(id)
     ),
-    removeUser: validate(schema.remove, (_, { id }, { models }) =>
-      models.User.findOneAndRemove({ _id: id })
-        .lean()
-        .exec()
+    signup: validate(schema.signup, (_, { input }, { dataSources }) =>
+      dataSources.users.create(input)
+    ),
+    login: validate(schema.login, (_, { email, password }, { dataSources }) =>
+      dataSources.users.login(email, password)
     )
   },
-
   User: {
-    __resolveReference(user, ctx) {
-      return ctx.dataSources.users.findById(user.id)
-    }
+    __resolveReference: ({ id }, { dataSources }) =>
+      dataSources.users.findById(id)
   }
 }
-
-export default resolvers

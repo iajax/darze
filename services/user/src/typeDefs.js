@@ -1,6 +1,6 @@
 import { gql } from 'apollo-server'
 
-const schema = gql`
+export default gql`
   type User @key(fields: "id") {
     id: ID!
     firstName: String
@@ -36,8 +36,8 @@ const schema = gql`
   }
 
   type Query {
-    getUsers: [User]
-    getUser(id: ID!): User
+    getUsers: [User!]!
+    getUser(id: ID!): User!
   }
 
   type Mutation {
@@ -47,5 +47,3 @@ const schema = gql`
     removeUser(id: ID!): User!
   }
 `
-
-export default schema
