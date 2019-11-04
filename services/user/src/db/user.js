@@ -48,6 +48,7 @@ schema.pre('save', async function(next) {
   try {
     if (!this.isModified('password')) return next()
     this.password = await bcrypt.hash(this.password, 10)
+
     return next()
   } catch (err) {
     return next(err)
@@ -61,8 +62,8 @@ schema.method({
 })
 
 schema.static({
-  doesntExist: async function(conditions) {
-    return (await this.find(conditions).countDocuments()) === 0
+  doesntExist: async function(filter) {
+    return (await this.find(filter).countDocuments()) === 0
   }
 })
 
