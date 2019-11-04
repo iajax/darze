@@ -1,27 +1,25 @@
 import Joi from '@hapi/joi'
 
-const objectIdSchema = {
-  id: Joi.string().pattern(/^[0-9a-fA-F]{24}$/, 'mongo id')
-}
+const idSchema = Joi.string()
+  .required()
+  .pattern(/^[0-9a-fA-F]{24}$/, 'mongo id')
 
 const emailAndPasswordSchema = {
   email: Joi.string()
     .email()
-    .required()
-    .label('Email'),
+    .required(),
   password: Joi.string()
     .min(3)
     .required()
-    .label('Password')
 }
 
 export default {
   get: Joi.object().keys({
-    ...objectIdSchema
+    id: idSchema
   }),
   signup: Joi.object().keys({
     input: Joi.object().keys({
-      firstName: Joi.string().label('firstName'),
+      firstName: Joi.string(),
       ...emailAndPasswordSchema
     })
   }),
@@ -29,15 +27,13 @@ export default {
     ...emailAndPasswordSchema
   }),
   update: Joi.object().keys({
-    ...objectIdSchema,
+    id: idSchema,
     input: Joi.object().keys({
-      firstName: Joi.string()
-        .required()
-        .label('firstName'),
+      firstName: Joi.string().required(),
       ...emailAndPasswordSchema
     })
   }),
   remove: Joi.object().keys({
-    ...objectIdSchema
+    id: idSchema
   })
 }

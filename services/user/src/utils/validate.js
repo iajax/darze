@@ -1,7 +1,7 @@
 import { UserInputError } from 'apollo-server'
 import { map } from 'lodash'
 
-const validate = (schema, next) => async (root, args, context, info) => {
+export default (schema, next) => async (root, args, context, info) => {
   try {
     await schema.validateAsync(args)
   } catch (err) {
@@ -17,5 +17,3 @@ const validate = (schema, next) => async (root, args, context, info) => {
 
   return next(root, args, context, info)
 }
-
-export default validate
