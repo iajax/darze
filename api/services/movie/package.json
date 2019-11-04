@@ -7,10 +7,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "start": "node -r esm src",
+    "start": "node -r esm .",
     "dev": "nodemon -r esm",
     "format": "prettier --write \"src/**/*.{js,json}\"",
-    "lint": "eslint src --ext .js"
+    "lint": "eslint . --ext .js"
   },
   "husky": {
     "hooks": {
