@@ -19,7 +19,7 @@
     "esm": "3.2.25"
   },
   "devDependencies": {
-    "lerna": "3.18.3",
+    "lerna": "3.19.0",
     "nodemon": "1.19.4",
     "wait-on": "3.3.0"
   }
