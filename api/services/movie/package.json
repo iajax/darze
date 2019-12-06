@@ -21,7 +21,7 @@
     "@apollo/federation": "0.11.2",
     "@hapi/joi": "16.1.8",
     "apollo-datasource": "0.6.3",
-    "apollo-server": "2.9.12",
+    "apollo-server": "2.9.13",
     "dataloader": "2.0.0",
     "dotenv": "8.1.0",
     "esm": "3.2.25",
