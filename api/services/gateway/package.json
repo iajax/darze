@@ -18,7 +18,7 @@
     }
   },
   "dependencies": {
-    "@apollo/gateway": "0.11.4",
+    "@apollo/gateway": "0.11.6",
     "apollo-server": "2.9.15",
     "esm": "3.2.25"
   },
@@ -26,7 +26,7 @@
     "eslint": "6.7.2",
     "eslint-config-prettier": "6.7.0",
     "husky": "3.1.0",
-    "nodemon": "2.0.1",
+    "nodemon": "2.0.2",
     "prettier": "1.19.1",
     "pretty-quick": "2.0.1"
   }
