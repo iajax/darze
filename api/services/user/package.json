@@ -22,7 +22,7 @@
     "@hapi/joi": "17.0.0",
     "apollo-datasource": "0.6.4",
     "apollo-server": "2.9.15",
-    "bcrypt": "3.0.7",
+    "bcrypt": "3.0.8",
     "dataloader": "2.0.0",
     "dotenv": "8.2.0",
     "esm": "3.2.25",
