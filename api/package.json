@@ -21,6 +21,6 @@
   "devDependencies": {
     "lerna": "3.20.2",
     "nodemon": "2.0.2",
-    "wait-on": "3.3.0"
+    "wait-on": "5.2.1"
   }
 }
