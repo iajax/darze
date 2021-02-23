@@ -21,7 +21,7 @@
     "@apollo/federation": "0.11.2",
     "@hapi/joi": "17.0.0",
     "apollo-datasource": "0.7.0",
-    "apollo-server": "2.11.0",
+    "apollo-server": "2.14.2",
     "bcrypt": "3.0.7",
     "dataloader": "2.0.0",
     "dotenv": "8.2.0",
