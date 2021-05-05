@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "concurrently": "6.0.2",
-    "dotenv": "8.2.0",
+    "dotenv": "8.6.0",
     "esm": "3.2.25"
   },
   "devDependencies": {
