@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@apollo/gateway": "0.26.1",
-    "apollo-server": "2.23.0",
+    "apollo-server": "2.25.4",
     "esm": "3.2.25"
   },
   "devDependencies": {
