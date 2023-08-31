@@ -18,10 +18,10 @@
     }
   },
   "dependencies": {
-    "@apollo/federation": "0.23.0",
+    "@apollo/federation": "0.38.1",
     "@hapi/joi": "17.0.0",
-    "apollo-datasource": "0.8.0",
-    "apollo-server": "2.21.0",
+    "apollo-datasource": "0.10.0",
+    "apollo-server": "2.26.2",
     "bcrypt": "5.0.1",
     "dataloader": "2.0.0",
     "dotenv": "8.2.0",
