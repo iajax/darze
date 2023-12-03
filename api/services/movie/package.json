@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@apollo/federation": "0.23.0",
-    "@hapi/joi": "17.0.0",
+    "joi": "17.1.1",
     "apollo-datasource": "0.8.0",
     "apollo-server": "2.23.0",
     "dataloader": "2.0.0",
